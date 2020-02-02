@@ -61,7 +61,7 @@ NoteController.getNoteByID = async (req, res) => {
 
 // Update a note identified by the noteId in the request
 NoteController.updateNote = async (req, res) => {
-  let  { cuid } = req.params;
+  let { cuid } = req.params;
   let { title, content } = req.body;
 
   try {
