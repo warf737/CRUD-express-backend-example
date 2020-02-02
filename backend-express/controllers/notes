@@ -19,7 +19,6 @@ NoteController.createNote = async (req, res) => {
       res.send(data);
     })
   } catch (err) {
-    console.log('error on create');
     errorHandler(res, err);
   }
 };
