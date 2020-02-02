@@ -1,20 +1,43 @@
 import Note from '../models/Note';
 import errorHandler from '../utils/errorHandler';
+import cuid from 'cuid';
 
 const NoteController = {};
 
+// Retrieve and return all notes from the database.
+NoteController.getAllNotes = async (req, res) =>  {
+  try {
+    await Note.find()
+      .then(notes => {
+        res.send(notes);
+      })
+  } catch (err) {
+    errorHandler(res, err);
+  }
+};
+
 // Create and Save a new Note
 NoteController.createNote = async (req, res) => {
+  let { title, content } = req.body;
+
   try {
+    // Validate request
+    if(!content) {
+      return res.status(400).send({
+        message: "Note content can not be empty"
+      });
+    }
+
     // Create a Note
-    console.log('req.body: ', req.body);
-    const note = new Note({
-      title: req.body.title || "Untitled Note",
-      content: req.body.content
+    const newCUID = cuid();
+    const newNote = new Note ({
+      title: title || 'Untitled Note',
+      content: content,
+      cuid: newCUID
     });
 
     // Save Note in the database
-    await note.save()
+    await newNote.save()
       .then(data => {
       res.send(data);
     })
@@ -23,22 +46,11 @@ NoteController.createNote = async (req, res) => {
   }
 };
 
-// Retrieve and return all notes from the database.
-NoteController.getAllNotes = async (req, res) =>  {
-  try {
-    await Note.find()
-      .then(notes => {
-      res.send(notes);
-    })
-  } catch (err) {
-    errorHandler(res, err);
-  }
-};
-
 // Find a single note with a noteId
 NoteController.getNoteByID = async (req, res) => {
+  let { cuid }  = req.params;
   try {
-    Note.findById(req.params.noteId)
+    Note.findOne({ cuid: cuid})
       .then(note => {
        res.send(note);
     });
@@ -49,11 +61,14 @@ NoteController.getNoteByID = async (req, res) => {
 
 // Update a note identified by the noteId in the request
 NoteController.updateNote = async (req, res) => {
+  let  { cuid } = req.params;
+  let { title, content } = req.body;
+
   try {
     // Find note and update it with the request body
-    Note.findByIdAndUpdate(req.params.noteId, {
-      title: req.body.title || 'Untitled Note',
-      content: req.body.content
+    await Note.findOneAndUpdate({ cuid: cuid }, {
+      title: title || 'Untitled Note',
+      content: content
     }, {new: true})
       .then(note => {
         res.send(note);
@@ -64,9 +79,12 @@ NoteController.updateNote = async (req, res) => {
 };
 
 NoteController.deleteNote = async (req, res) => {
+  let { cuid } = req.params;
+
   try {
-    Note.findByIdAndRemove(req.params.noteId).then(() => {
-      res.send({message:"Note deleted successfully!"});
+     await Note.findOneAndRemove({ cuid: cuid })
+       .then(() => {
+         res.send({message:"Note deleted successfully!"});
     })
   } catch (err) {
     errorHandler(res, err);

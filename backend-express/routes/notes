@@ -3,18 +3,28 @@ import notes from '../controllers/notes'
 const router = new Router();
 
   // Retrieve all Notes
-  router.get('/notes', notes.getAllNotes);
+  router.get('/notes', (req, res) => {
+    notes.getAllNotes(req, res);
+  });
 
   // Create a new Note
-  router.post('/notes', notes.createNote);
+  router.post('/notes',(req, res) => {
+    notes.createNote(req, res);
+  });
 
   // Retrieve a single Note with noteId
-  router.get('/notes/:noteId', notes.getNoteByID);
+  router.get('/notes/:cuid', (req, res) => {
+    notes.getNoteByID(req, res);
+  });
 
-  // Update a Note with noteId
-  router.put('/notes/:noteId', notes.updateNote);
+  // // Update a Note with noteId
+  router.put('/notes/:cuid',(req, res) => {
+    notes.updateNote(req, res);
+  });
 
-  // Delete a Note with noteId
-  router.delete('/notes/:noteId', notes.deleteNote);
+  // // Delete a Note with noteId
+  router.delete('/notes/:cuid',(req, res) => {
+    notes.deleteNote(req, res)
+  });
 
 export default router;

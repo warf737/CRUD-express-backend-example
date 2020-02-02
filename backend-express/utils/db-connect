@@ -5,12 +5,14 @@ mongoose.Promise = global.Promise;
 
 const param = {
   useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 //-подключаем БД
 mongoose.Promise = global.Promise;
 const connectToMongoBD = function () {
-  mongoose.connect(config.mongoURL, param)
+  mongoose
+    .connect(config.mongoURL, param)
     .then(() => {
       console.log("MongoDB connected");
     }).catch((err) => {
