@@ -1,0 +1,20 @@
+import { Router } from 'express';
+import notes from '../controllers/notes'
+const router = new Router();
+
+  // Retrieve all Notes
+  router.get('/notes', notes.getAllNotes);
+
+  // Create a new Note
+  router.post('/notes', notes.createNote);
+
+  // Retrieve a single Note with noteId
+  router.get('/notes/:noteId', notes.getNoteByID);
+
+  // Update a Note with noteId
+  router.put('/notes/:noteId', notes.updateNote);
+
+  // Delete a Note with noteId
+  router.delete('/notes/:noteId', notes.deleteNote);
+
+export default router;

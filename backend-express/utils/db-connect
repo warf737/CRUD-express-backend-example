@@ -1,0 +1,22 @@
+import mongoose from 'mongoose';
+import config from '../config/keys';
+
+mongoose.Promise = global.Promise;
+
+const param = {
+  useNewUrlParser: true,
+};
+
+//-подключаем БД
+mongoose.Promise = global.Promise;
+const connectToMongoBD = function () {
+  mongoose.connect(config.mongoURL, param)
+    .then(() => {
+      console.log("MongoDB connected");
+    }).catch((err) => {
+    console.log("Not Connected to Database! - retrying connect in 5 sec", err);
+    setTimeout(connectToMongoBD(), 5000);
+  });
+};
+
+export default connectToMongoBD;

@@ -1,0 +1,77 @@
+import Note from '../models/Note';
+import errorHandler from '../utils/errorHandler';
+
+const NoteController = {};
+
+// Create and Save a new Note
+NoteController.createNote = async (req, res) => {
+  try {
+    // Create a Note
+    console.log('req.body: ', req.body);
+    const note = new Note({
+      title: req.body.title || "Untitled Note",
+      content: req.body.content
+    });
+
+    // Save Note in the database
+    await note.save()
+      .then(data => {
+      res.send(data);
+    })
+  } catch (err) {
+    console.log('error on create');
+    errorHandler(res, err);
+  }
+};
+
+// Retrieve and return all notes from the database.
+NoteController.getAllNotes = async (req, res) =>  {
+  try {
+    await Note.find()
+      .then(notes => {
+      res.send(notes);
+    })
+  } catch (err) {
+    errorHandler(res, err);
+  }
+};
+
+// Find a single note with a noteId
+NoteController.getNoteByID = async (req, res) => {
+  try {
+    Note.findById(req.params.noteId)
+      .then(note => {
+       res.send(note);
+    });
+  } catch (err) {
+    errorHandler(res, err);
+  }
+};
+
+// Update a note identified by the noteId in the request
+NoteController.updateNote = async (req, res) => {
+  try {
+    // Find note and update it with the request body
+    Note.findByIdAndUpdate(req.params.noteId, {
+      title: req.body.title || 'Untitled Note',
+      content: req.body.content
+    }, {new: true})
+      .then(note => {
+        res.send(note);
+      })
+  } catch (err) {
+    errorHandler(res, err);
+  }
+};
+
+NoteController.deleteNote = async (req, res) => {
+  try {
+    Note.findByIdAndRemove(req.params.noteId).then(() => {
+      res.send({message:"Note deleted successfully!"});
+    })
+  } catch (err) {
+    errorHandler(res, err);
+  }
+};
+
+export default NoteController;
