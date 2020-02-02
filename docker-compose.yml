@@ -4,6 +4,7 @@ services:
 
   mongo:
     image: mongo
+    container_name: mongodb
     restart: always
     environment:
       MONGO_DATA_DIR: /data/db
@@ -18,3 +19,16 @@ services:
     restart: always
     ports:
       - 8081:8081
+
+#  server:
+#    build: .backend-express
+#    expose:
+#      - 27017
+#    environment:
+#      API_HOST: localhost
+#      APP_SERVER_PORT: ${APP_SERVER_PORT}
+#    ports:
+#      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+#    volumes:
+#      - ./backend-express:/srv/app/
+#    command: npm run dev
