@@ -1,4 +1,4 @@
-# frontend--vue-no-vuex
+# vue-example
 
 > A Vue.js project
 
